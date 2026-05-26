@@ -76,7 +76,7 @@ Setup(ctx =>
         isLocalBuild,
         configuration,
         target,
-        new[]{ "net8.0", "net9.0" },
+        new[]{ "net8.0", "net9.0", "net10.0" },
         new DotNetMSBuildSettings()
                             .WithProperty("Version", semVersion)
                             .WithProperty("AssemblyVersion", version)
@@ -213,7 +213,7 @@ Task("Publish-Artifacts")
 Task("Create-NuGet-Package")
     .IsDependentOn("Create-NuGet-Package-Scripting")
     .IsDependentOn("Create-NuGet-Package-Frosting");
-    
+
 Task("Create-NuGet-Package-Scripting")
     .IsDependentOn("Publish-Artifacts")
     .Does<BuildData>(static (context, data) =>
@@ -223,8 +223,8 @@ Task("Create-NuGet-Package-Scripting")
     var libGit = context.GetFiles(data.BuildPaths.ArtifactsRoot.FullPath + "/**/LibGit2Sharp*");
     var unmanaged = context.GetFiles(data.BuildPaths.ArtifactsRoot.FullPath + "/net8.0/runtimes/**/*");
 
-    data.NuGetPackSettings.Description += Environment.NewLine + Environment.NewLine + 
-                                          "NOTE:" + Environment.NewLine + 
+    data.NuGetPackSettings.Description += Environment.NewLine + Environment.NewLine +
+                                          "NOTE:" + Environment.NewLine +
                                           "The addin currently only runs on x64 processors. ARM processors are not supported." + Environment.NewLine +
                                           "This is the version of the addin compatible with Cake Script Runners." + Environment.NewLine +
                                           "For addin compatible with Cake Frosting see Cake.Frosting.Git.";
@@ -267,8 +267,8 @@ Task("Create-NuGet-Package-Frosting")
     var cakeGitDoc = context.GetFiles(data.BuildPaths.ArtifactsRoot.FullPath + "/**/Cake.Git.xml");
 
     data.NuGetPackSettings.Id = "Cake.Frosting.Git";
-    data.NuGetPackSettings.Description += Environment.NewLine + Environment.NewLine + 
-                                          "NOTE:" + Environment.NewLine + 
+    data.NuGetPackSettings.Description += Environment.NewLine + Environment.NewLine +
+                                          "NOTE:" + Environment.NewLine +
                                           "This is the version of the addin compatible with Cake Frosting." + Environment.NewLine +
                                           "For addin compatible with Cake Script Runners see Cake.Git." + Environment.NewLine;
     data.NuGetPackSettings.Files =  (cakeGit + cakeGitDoc)
@@ -286,7 +286,7 @@ Task("Create-NuGet-Package-Frosting")
                                     .ToArray();
     data.NuGetPackSettings.Dependencies = new List<NuSpecDependency>
     {
-        new NuSpecDependency { Id = "Cake.Core", Version = "5.0.0" },
+        new NuSpecDependency { Id = "Cake.Core", Version = "6.2.0" },
         new NuSpecDependency { Id = "LibGit2Sharp", Version = "0.30.0" }
     };
 
